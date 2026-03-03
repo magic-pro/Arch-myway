@@ -1,0 +1,66 @@
+syntax = “proto3”;
+
+package homelayout.v1;
+
+option go_package = “github.com/magic-pro/Arch-myway/gen/go”;
+
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
+
+enum HouseStories {
+HOUSE_STORIES_UNSPECIFIED = 0;
+HOUSE_STORIES_ONE         = 1;
+HOUSE_STORIES_TWO         = 2;
+HOUSE_STORIES_SPLIT_LEVEL = 3;
+}
+
+enum ArchitecturalStyle {
+ARCHITECTURAL_STYLE_UNSPECIFIED   = 0;
+ARCHITECTURAL_STYLE_MODERN        = 1;
+ARCHITECTURAL_STYLE_CONTEMPORARY  = 2;
+ARCHITECTURAL_STYLE_COLONIAL      = 3;
+ARCHITECTURAL_STYLE_CRAFTSMAN     = 4;
+ARCHITECTURAL_STYLE_MEDITERRANEAN = 5;
+ARCHITECTURAL_STYLE_MINIMALIST    = 6;
+}
+
+enum ColorPalette {
+COLOR_PALETTE_UNSPECIFIED = 0;
+COLOR_PALETTE_WARM        = 1;
+COLOR_PALETTE_COOL        = 2;
+COLOR_PALETTE_EARTHY      = 3;
+COLOR_PALETTE_MONOCHROME  = 4;
+COLOR_PALETTE_BOLD        = 5;
+}
+
+// ─────────────────────────────────────────
+// HOUSE
+// ─────────────────────────────────────────
+
+message House {
+string              house_id         = 1;
+string              owner_name       = 2;
+HouseStories        stories          = 3;
+ArchitecturalStyle  style            = 4;
+double              total_sq_ft      = 5;
+repeated Room       rooms            = 6;
+ExteriorPreferences exterior         = 7;
+BudgetRange         budget           = 8;
+string              location_climate = 9; // “tropical”, “cold”, “arid”
+}
+
+message ExteriorPreferences {
+string facade_material  = 1; // “brick”, “stucco”, “wood”
+string roof_type        = 2; // “gable”, “flat”, “hip”
+bool   has_porch        = 3;
+bool   has_garage       = 4;
+string landscape_style  = 5; // “zen”, “cottage”, “tropical”
+}
+
+message BudgetRange {
+string currency   = 1; // “USD”
+double min_budget = 2;
+double max_budget = 3;
+string tier       = 4; // “budget”, “mid-range”, “luxury”
+}
