@@ -1,0 +1,30 @@
+version: v2
+plugins:
+
+# Go — server & client
+
+- remote: buf.build/protocolbuffers/go
+  out: gen/go
+  opt:
+  - paths=source_relative
+
+# Connect-Go — HTTP/gRPC handlers
+
+- remote: buf.build/connectrpc/go
+  out: gen/go
+  opt:
+  - paths=source_relative
+
+# TypeScript / JavaScript (ES modules)
+
+- remote: buf.build/bufbuild/es
+  out: gen/ts
+  opt:
+  - target=ts
+
+# Connect-ES — TypeScript client
+
+- remote: buf.build/connectrpc/es
+  out: gen/ts
+  opt:
+  - target=ts
