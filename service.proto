@@ -1,0 +1,88 @@
+syntax = “proto3”;
+
+package homelayout.v1;
+
+import “homelayout/v1/house.proto”;
+import “homelayout/v1/room.proto”;
+import “homelayout/v1/suggestions.proto”;
+
+option go_package = “github.com/magic-pro/Arch-myway/gen/go”;
+
+// ─────────────────────────────────────────
+// REQUEST / RESPONSE MESSAGES
+// ─────────────────────────────────────────
+
+message CreateHouseRequest {
+House house = 1;
+}
+
+message CreateHouseResponse {
+string house_id = 1;
+string message  = 2;
+}
+
+message GetHouseRequest {
+string house_id = 1;
+}
+
+message GetHouseResponse {
+House house = 1;
+}
+
+message GetDesignSuggestionsRequest {
+string   house_id    = 1;
+RoomType room_type   = 2; // optional filter — leave unspecified for all rooms
+int32    max_results = 3; // default 5
+}
+
+message GetDesignSuggestionsResponse {
+repeated DesignSuggestion suggestions = 1;
+string                    summary     = 2;
+}
+
+message StreamDesignIdeasRequest {
+string house_id  = 1;
+string room_name = 2;
+}
+
+message UpdateRoomPreferencesRequest {
+string          house_id    = 1;
+string          room_id     = 2;
+RoomPreferences preferences = 3;
+}
+
+message UpdateRoomPreferencesResponse {
+bool   success = 1;
+string message = 2;
+}
+
+// ─────────────────────────────────────────
+// SERVICE DEFINITION
+// ─────────────────────────────────────────
+
+service HouseLayoutService {
+
+// Create and save a new house blueprint
+rpc CreateHouse(CreateHouseRequest)
+returns (CreateHouseResponse);
+
+// Retrieve a saved house blueprint
+rpc GetHouse(GetHouseRequest)
+returns (GetHouseResponse);
+
+// Update room preferences after initial design
+rpc UpdateRoomPreferences(UpdateRoomPreferencesRequest)
+returns (UpdateRoomPreferencesResponse);
+
+// Get design suggestions for any/all rooms in the house
+rpc GetDesignSuggestions(GetDesignSuggestionsRequest)
+returns (GetDesignSuggestionsResponse);
+
+// Stream design ideas in real-time (AI typing suggestions live)
+rpc StreamDesignIdeas(StreamDesignIdeasRequest)
+returns (stream DesignSuggestion);
+
+// Client streams room photos; server responds with style analysis
+rpc AnalyzeRoomPhotos(stream RoomPhotoRequest)
+returns (RoomAnalysisResponse);
+}
