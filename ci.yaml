@@ -1,0 +1,88 @@
+name: Buf CI
+
+on:
+push:
+branches: [ main, develop ]
+pull_request:
+branches: [ main ]
+
+jobs:
+
+# ─────────────────────────────────────────
+
+# JOB 1: Lint proto files
+
+# ─────────────────────────────────────────
+
+lint:
+name: Lint Protobuf Schemas
+runs-on: ubuntu-latest
+steps:
+- name: Checkout code
+uses: actions/checkout@v4
+
+```
+  - name: Setup Buf CLI
+    uses: bufbuild/buf-action@v1
+    with:
+      version: '1.32.0'
+
+  - name: Run buf lint
+    run: buf lint
+```
+
+# ─────────────────────────────────────────
+
+# JOB 2: Breaking change detection (shift-left)
+
+# ─────────────────────────────────────────
+
+breaking:
+name: Breaking Change Detection
+runs-on: ubuntu-latest
+steps:
+- name: Checkout code
+uses: actions/checkout@v4
+
+```
+  - name: Setup Buf CLI
+    uses: bufbuild/buf-action@v1
+    with:
+      version: '1.32.0'
+
+  - name: Check for breaking changes against main
+    run: buf breaking --against "https://github.com/magic-pro/Arch-myway.git#branch=main"
+```
+
+# ─────────────────────────────────────────
+
+# JOB 3: Generate code (shift-left — verify gen is up to date)
+
+# ─────────────────────────────────────────
+
+generate:
+name: Verify Code Generation
+runs-on: ubuntu-latest
+steps:
+- name: Checkout code
+uses: actions/checkout@v4
+
+```
+  - name: Setup Buf CLI
+    uses: bufbuild/buf-action@v1
+    with:
+      version: '1.32.0'
+
+  - name: Generate code from proto
+    run: buf generate
+
+  - name: Check for uncommitted generated files
+    run: |
+      if [ -n "$(git status --porcelain gen/)" ]; then
+        echo "❌ Generated files are out of sync. Run 'buf generate' locally and commit."
+        git diff gen/
+        exit 1
+      else
+        echo "✅ Generated files are in sync."
+      fi
+```
