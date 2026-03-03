@@ -1,0 +1,48 @@
+syntax = “proto3”;
+
+package homelayout.v1;
+
+import “homelayout/v1/house.proto”;
+
+option go_package = “github.com/magic-pro/Arch-myway/gen/go”;
+
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
+
+enum RoomType {
+ROOM_TYPE_UNSPECIFIED = 0;
+ROOM_TYPE_LIVING_ROOM = 1;
+ROOM_TYPE_BEDROOM     = 2;
+ROOM_TYPE_STUDY       = 3;
+ROOM_TYPE_KITCHEN     = 4;
+ROOM_TYPE_BATHROOM    = 5;
+ROOM_TYPE_GARAGE      = 6;
+ROOM_TYPE_DINING_ROOM = 7;
+}
+
+// ─────────────────────────────────────────
+// ROOM
+// ─────────────────────────────────────────
+
+message Room {
+string          room_id       = 1;
+RoomType        room_type     = 2;
+string          room_name     = 3; // e.g. “Master Bedroom”
+double          width_ft      = 4;
+double          length_ft     = 5;
+double          ceiling_ht_ft = 6;
+int32           floor_number  = 7; // 1 or 2
+repeated string windows       = 8; // [“north”, “east”]
+RoomPreferences preferences   = 9;
+}
+
+message RoomPreferences {
+ColorPalette    color_palette   = 1;
+string          flooring_type   = 2; // “hardwood”, “tile”, “carpet”
+string          lighting_mood   = 3; // “warm”, “bright”, “dim”
+bool            has_fireplace   = 4;
+bool            has_built_ins   = 5;
+repeated string furniture_style = 6; // [“mid-century”, “scandinavian”]
+string          primary_use     = 7; // “relaxing”, “working”, “entertaining”
+}
